@@ -15,12 +15,13 @@ export interface Project {
 export const projects: Project[] = [
     {
         id: "hotel-booking",
-        name: "Hotel Booking System",
+        name: "Bookongo - Hotel Booking System",
         description: "Full-stack MERN application for hotel room booking with payment integration and admin dashboard",
         longDescription: "Complete booking platform with payment integration, room management, user authentication, and admin dashboard for managing reservations.",
         techStack: ["React", "Node.js", "MongoDB", "Express.js", "Tailwind CSS"],
         category: "fullstack",
         github: "https://github.com/satyakiabhijit/bookongo",
+        demo: "https://bookongo.vercel.app",
         featured: true,
         year: "2024"
     },
@@ -50,11 +51,12 @@ export const projects: Project[] = [
     {
         id: "gamehub",
         name: "GameHub",
-        description: "Interactive gaming platform with multiple classic games and modern UI design",
+        description: "Interactive gaming platform with multiple classic games including Chess with full AI and modern UI design",
         techStack: ["React", "TypeScript", "Chakra UI", "RAWG API"],
         category: "web",
         github: "https://github.com/satyakiabhijit/gamehub",
-        demo: "https://satyakiabhijit.github.io/gamehub/",
+        demo: "https://game-hub-satyakiabhijit.vercel.app",
+        featured: true,
         year: "2024"
     },
     {
@@ -64,7 +66,7 @@ export const projects: Project[] = [
         techStack: ["JavaScript", "HTML5", "CSS3", "Canvas API"],
         category: "web",
         github: "https://github.com/satyakiabhijit/business-card-generator",
-        demo: "https://satyakiabhijit.github.io/business-card-generator/",
+        demo: "https://business-card-generator-eight.vercel.app",
         year: "2024"
     },
     {
@@ -74,7 +76,7 @@ export const projects: Project[] = [
         techStack: ["JavaScript", "Web Audio API", "HTML5", "CSS3"],
         category: "web",
         github: "https://github.com/satyakiabhijit/Sound_Wave",
-        demo: "https://satyakiabhijit.github.io/Sound_Wave/",
+        demo: "https://sound-wave-iota.vercel.app",
         year: "2024"
     },
     {
