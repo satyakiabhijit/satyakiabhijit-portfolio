@@ -74,7 +74,7 @@ export default function Navbar() {
                         whileTap={{ scale: 0.98 }}
                     >
                         <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                            Abhijit
+                            satyakiabhijit
                         </span>
                         <span className="text-indigo-500">.</span>
                     </motion.a>
