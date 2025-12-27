@@ -6,7 +6,7 @@ export const profile = {
     email: "abhijitsatyaki29@gmail.com",
     phone: "+91-6297575275",
     location: "Jalpaiguri, India",
-    avatar: "https://avatars.githubusercontent.com/u/171671037?v=4",
+    avatar: "/logo.png",
     resumeLink: "https://drive.google.com/file/d/1yTCSw6y3Z3z6U4mbOdCQS3xSgc10lYlh/",
     bio: `I'm Abhijit Satyaki, a passionate Full-Stack Web Developer, Machine Learning enthusiast, and IT undergraduate at Jalpaiguri Government Engineering College. I specialize in building responsive, user-centric web applications using HTML, CSS, JavaScript, and Python, while also exploring the power of data-driven solutions through machine learning.
 
@@ -156,7 +156,8 @@ export const certifications = [
         description: "Foundational knowledge of AI product development lifecycle, from conception to deployment, including model training and production workflows.",
         skills: ["AI Product Development", "MLOps", "Deployment"],
         link: "https://www.linkedin.com/learning/certificates/df26578a152b909353229aa36d5fd4962b7fa16e672cc389c2b3c4e0c0d5533f",
-        icon: "linkedin"
+        icon: "linkedin",
+        image: "/images/Certificates/Ai products.jpg"
     },
     {
         id: "data-analysis",
@@ -166,7 +167,8 @@ export const certifications = [
         verified: true,
         description: "Advanced data analysis techniques using Microsoft Excel, including pivot tables, data visualization, and statistical analysis methods.",
         skills: ["Data Analysis", "Excel", "Visualization"],
-        icon: "microsoft"
+        icon: "microsoft",
+        image: "/images/Certificates/Data Analysis-Microsoft.jpg"
     }
 ];
 

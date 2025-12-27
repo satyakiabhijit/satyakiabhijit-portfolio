@@ -12,6 +12,7 @@ import TimelineItem from "@/components/TimelineItem";
 import SkillBadge from "@/components/SkillBadge";
 import ContactForm from "@/components/ContactForm";
 import TechIcon from "@/components/TechIcon";
+import Modal from "@/components/Modal";
 import { useState, useEffect } from "react";
 
 
@@ -76,6 +77,8 @@ function StatCard({ value, label, icon: Icon }: { value: string; label: string; 
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("all");
+  const [selectedCert, setSelectedCert] = useState<{ name: string; image: string } | null>(null);
+  const [selectedService, setSelectedService] = useState<{ title: string; description: string } | null>(null);
 
   const filteredProjects =
     activeCategory === "all"
@@ -319,7 +322,8 @@ export default function Home() {
                 <motion.div
                   whileHover={{ y: -8, scale: 1.02 }}
                   transition={{ duration: 0.3 }}
-                  className="group premium-card rounded-2xl p-6 h-full cursor-default"
+                  className="group premium-card rounded-2xl p-6 h-full cursor-pointer"
+                  onClick={() => setSelectedService({ title: service.title, description: service.description })}
                 >
                   {/* Icon */}
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
@@ -336,12 +340,12 @@ export default function Home() {
                     {service.title}
                   </h3>
 
-                  {/* Description */}
-                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                  {/* Description Preview */}
+                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-3">
                     {service.description}
                   </p>
 
-                  {/* Hover Indicator */}
+                  {/* Click Indicator */}
                   <div className="mt-5 flex items-center gap-2 text-indigo-600 dark:text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity">
                     <span className="text-sm font-medium">Learn More</span>
                     <ArrowRight size={16} />
@@ -788,7 +792,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {certifications.map((cert, index) => (
               <AnimatedSection key={cert.id} delay={index * 0.1}>
-                <div className="premium-card rounded-2xl p-6 h-full">
+                <div className="premium-card rounded-2xl p-6 h-full flex flex-col">
                   <div className="flex items-center justify-between mb-4">
                     <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white">
                       <Award size={24} />
@@ -800,14 +804,27 @@ export default function Home() {
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{cert.name}</h3>
                   <p className="text-indigo-600 dark:text-indigo-400 font-medium text-sm mb-1">{cert.issuer}</p>
                   <p className="text-slate-500 dark:text-slate-500 text-sm mb-3">Completed: {cert.year}</p>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">{cert.description}</p>
-                  <div className="flex flex-wrap gap-2">
+                  <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 flex-grow">{cert.description}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
                     {cert.skills.map((skill) => (
                       <span key={skill} className="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                         {skill}
                       </span>
                     ))}
                   </div>
+                  {/* View Certificate Button */}
+                  {(cert as { image?: string }).image && (
+                    <button
+                      onClick={() => {
+                        const certWithImage = cert as { name: string; image?: string };
+                        setSelectedCert({ name: cert.name, image: certWithImage.image! });
+                      }}
+                      className="w-full mt-auto py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold text-sm hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 flex items-center justify-center gap-2"
+                    >
+                      <Award size={16} />
+                      View Certificate
+                    </button>
+                  )}
                 </div>
               </AnimatedSection>
             ))}
@@ -891,10 +908,10 @@ export default function Home() {
             </div>
           </AnimatedSection>
         </div>
-      </section>
+      </section >
 
       {/* Contact Section */}
-      <section id="contact" className="py-24 lg:py-32 bg-white dark:bg-slate-900/50">
+      < section id="contact" className="py-24 lg:py-32 bg-white dark:bg-slate-900/50" >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
@@ -961,6 +978,40 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Certificate Image Modal */}
+      <Modal
+        isOpen={!!selectedCert}
+        onClose={() => setSelectedCert(null)}
+        title={selectedCert?.name}
+      >
+        {selectedCert && (
+          <div className="p-6">
+            <Image
+              src={selectedCert.image}
+              alt={selectedCert.name}
+              width={800}
+              height={600}
+              className="rounded-lg w-full h-auto"
+            />
+          </div>
+        )}
+      </Modal>
+
+      {/* Service Detail Modal */}
+      <Modal
+        isOpen={!!selectedService}
+        onClose={() => setSelectedService(null)}
+        title={selectedService?.title}
+      >
+        {selectedService && (
+          <div className="p-6">
+            <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+              {selectedService.description}
+            </p>
+          </div>
+        )}
+      </Modal>
     </>
   );
 }

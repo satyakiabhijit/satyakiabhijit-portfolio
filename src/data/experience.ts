@@ -14,6 +14,22 @@ export interface Experience {
 export const experiences: Experience[] = [
     // Work Experience
     {
+        id: "edulinkup",
+        type: "work",
+        title: "Web Developer & Software Tester",
+        organization: "EduLinkUp",
+        startDate: "Dec 2025",
+        endDate: "Present",
+        current: true,
+        description: [
+            "Developing and maintaining responsive web applications using modern frameworks",
+            "Performing comprehensive software testing to ensure quality and reliability",
+            "Collaborating with cross-functional teams to deliver seamless user experiences",
+            "Implementing best practices for code quality and testing standards"
+        ],
+        skills: ["React", "Node.js", "TypeScript", "Testing", "QA"]
+    },
+    {
         id: "pinnacle-labs",
         type: "work",
         title: "Web Development Intern",

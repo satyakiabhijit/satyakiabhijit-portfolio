@@ -36,6 +36,13 @@ export const metadata: Metadata = {
     default: "Abhijit Satyaki | Full Stack Developer & ML Engineer",
     template: "%s | Abhijit Satyaki",
   },
+  icons: {
+    icon: [
+      { url: "/images/logos/logo.png", sizes: "any" },
+    ],
+    shortcut: "/images/logos/logo.png",
+    apple: "/logo.png",
+  },
   description:
     "Portfolio of Abhijit Satyaki - Full Stack Developer, Lead Software Tester at edulink.dev, and B.Tech IT student at JGEC. Expert in React, Node.js, Python, Machine Learning, and Web Development. View my projects and get in touch.",
   keywords: [
@@ -80,11 +87,11 @@ export const metadata: Metadata = {
       "Full Stack Developer specializing in React, Node.js, Python & Machine Learning. B.Tech IT student at JGEC. View my projects and let's build something amazing together.",
     images: [
       {
-        url: "https://avatars.githubusercontent.com/u/171671037?v=4",
+        url: "/logo.png",
         width: 400,
         height: 400,
         alt: "Abhijit Satyaki - Full Stack Developer",
-        type: "image/jpeg",
+        type: "image/png",
       },
     ],
   },
@@ -93,7 +100,7 @@ export const metadata: Metadata = {
     title: "Abhijit Satyaki | Full Stack Developer & ML Engineer",
     description:
       "Full Stack Developer specializing in React, Node.js, Python & ML. Check out my portfolio!",
-    images: ["https://avatars.githubusercontent.com/u/171671037?v=4"],
+    images: ["/logo.png"],
     creator: "@satyakiabhijit",
   },
   robots: {
@@ -138,7 +145,7 @@ const jsonLd = {
       "@id": `${siteUrl}/#person`,
       name: "Abhijit Satyaki",
       url: siteUrl,
-      image: "https://avatars.githubusercontent.com/u/171671037?v=4",
+      image: "/logo.png",
       sameAs: [
         "https://github.com/satyakiabhijit",
         "https://linkedin.com/in/abhijitsatyaki",
@@ -196,8 +203,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/images/logos/logo.png" sizes="any" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body
