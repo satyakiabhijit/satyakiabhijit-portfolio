@@ -958,9 +958,9 @@ export default function Home() {
                         <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 transition-shadow">
                           <contact.icon size={20} />
                         </div>
-                        <div>
+                        <div className="min-w-0 flex-1">
                           <p className="text-sm text-slate-500 dark:text-slate-500">{contact.label}</p>
-                          <p className="font-semibold text-slate-900 dark:text-white">
+                          <p className="font-semibold text-slate-900 dark:text-white break-all">
                             {contact.value}
                           </p>
                         </div>
