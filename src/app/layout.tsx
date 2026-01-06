@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import WinterEffects from "@/components/WinterEffects";
+import LazyWinterEffects from "@/components/LazyWinterEffects";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,9 +38,7 @@ export const metadata: Metadata = {
     template: "%s | Abhijit Satyaki",
   },
   icons: {
-    icon: [
-      { url: "/images/logos/logo.png", sizes: "any" },
-    ],
+    icon: [{ url: "/images/logos/logo.png", sizes: "any" }],
     shortcut: "/images/logos/logo.png",
     apple: "/logo.png",
   },
@@ -134,7 +133,8 @@ const jsonLd = {
       "@id": `${siteUrl}/#website`,
       url: siteUrl,
       name: "Abhijit Satyaki Portfolio",
-      description: "Portfolio of Abhijit Satyaki - Full Stack Developer & ML Engineer",
+      description:
+        "Portfolio of Abhijit Satyaki - Full Stack Developer & ML Engineer",
       publisher: {
         "@id": `${siteUrl}/#person`,
       },
@@ -150,7 +150,11 @@ const jsonLd = {
         "https://github.com/satyakiabhijit",
         "https://linkedin.com/in/abhijitsatyaki",
       ],
-      jobTitle: ["Full Stack Developer", "Machine Learning Engineer", "Lead Software Tester"],
+      jobTitle: [
+        "Full Stack Developer",
+        "Machine Learning Engineer",
+        "Lead Software Tester",
+      ],
       worksFor: {
         "@type": "Organization",
         name: "edulink.dev",
@@ -171,7 +175,8 @@ const jsonLd = {
         "MongoDB",
         "REST APIs",
       ],
-      description: "Full Stack Developer and ML Engineer specializing in building modern web applications with React, Node.js, and Python.",
+      description:
+        "Full Stack Developer and ML Engineer specializing in building modern web applications with React, Node.js, and Python.",
     },
     {
       "@type": "ProfilePage",
@@ -211,11 +216,25 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} antialiased min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100`}
       >
         <ThemeProvider>
-          <WinterEffects />
+          <LazyWinterEffects />
           <Navbar />
           <main>{children}</main>
           <Footer />
         </ThemeProvider>
+        {/* Buy Me a Coffee Button */}
+        <Script
+          src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+          data-name="bmc-button"
+          data-slug="satyakiabhijit"
+          data-color="#40DCA5"
+          data-emoji=""
+          data-font="Cookie"
+          data-text="Buy me a coffee"
+          data-outline-color="#000000"
+          data-font-color="#ffffff"
+          data-coffee-color="#FFDD00"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

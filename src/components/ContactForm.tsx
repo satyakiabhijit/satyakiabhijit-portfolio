@@ -43,8 +43,17 @@ export default function ContactForm() {
 
         setStatus("loading");
 
-        // Simulate form submission
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        // Create mailto link with prefilled data
+        const subject = encodeURIComponent(`Message from ${formData.name} via Portfolio`);
+        const body = encodeURIComponent(
+            `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+        );
+        const mailtoLink = `mailto:abhijitsatyaki29@gmail.com?subject=${subject}&body=${body}`;
+
+        // Small delay for UX, then open email client
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        window.open(mailtoLink, "_self");
 
         setStatus("success");
         setFormData({ name: "", email: "", message: "" });
@@ -91,10 +100,10 @@ export default function ContactForm() {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="John Doe"
+                        placeholder="Firstname Lastname"
                         className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border-2 ${errors.name
-                                ? "border-red-400 dark:border-red-500 focus:border-red-500"
-                                : "border-slate-200 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500"
+                            ? "border-red-400 dark:border-red-500 focus:border-red-500"
+                            : "border-slate-200 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500"
                             } text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300`}
                     />
                     {errors.name && (
@@ -118,10 +127,10 @@ export default function ContactForm() {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="john@example.com"
+                        placeholder="email@example.com"
                         className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border-2 ${errors.email
-                                ? "border-red-400 dark:border-red-500 focus:border-red-500"
-                                : "border-slate-200 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500"
+                            ? "border-red-400 dark:border-red-500 focus:border-red-500"
+                            : "border-slate-200 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500"
                             } text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300`}
                     />
                     {errors.email && (
@@ -147,8 +156,8 @@ export default function ContactForm() {
                         rows={5}
                         placeholder="Tell me about your project or opportunity..."
                         className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border-2 ${errors.message
-                                ? "border-red-400 dark:border-red-500 focus:border-red-500"
-                                : "border-slate-200 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500"
+                            ? "border-red-400 dark:border-red-500 focus:border-red-500"
+                            : "border-slate-200 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500"
                             } text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 resize-none`}
                     />
                     {errors.message && (
@@ -163,10 +172,10 @@ export default function ContactForm() {
                     type="submit"
                     disabled={status === "loading" || status === "success"}
                     className={`w-full py-4 px-6 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${status === "success"
-                            ? "bg-green-500 text-white"
-                            : status === "loading"
-                                ? "bg-indigo-400 text-white cursor-not-allowed"
-                                : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:shadow-indigo-500/30"
+                        ? "bg-green-500 text-white"
+                        : status === "loading"
+                            ? "bg-indigo-400 text-white cursor-not-allowed"
+                            : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:shadow-indigo-500/30"
                         }`}
                     whileHover={status === "idle" ? { scale: 1.01 } : {}}
                     whileTap={status === "idle" ? { scale: 0.99 } : {}}

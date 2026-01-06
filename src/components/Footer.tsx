@@ -61,6 +61,24 @@ export default function Footer() {
                                 <social.icon size={18} />
                             </motion.a>
                         ))}
+                        {/* Buy Me a Coffee */}
+                        <motion.a
+                            href="https://www.buymeacoffee.com/satyakiabhijit"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-3 rounded-xl bg-[#40DCA5] border border-[#40DCA5] text-white hover:bg-[#36c795] hover:border-[#36c795] transition-all duration-300 shadow-sm"
+                            whileHover={{ y: -4, scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            aria-label="Buy me a coffee"
+                        >
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                                <line x1="6" y1="1" x2="6" y2="4" />
+                                <line x1="10" y1="1" x2="10" y2="4" />
+                                <line x1="14" y1="1" x2="14" y2="4" />
+                            </svg>
+                        </motion.a>
                     </div>
 
                     {/* Copyright */}

@@ -651,3 +651,10 @@ textarea:focus-visible {
   animation-timing-function: linear, ease-in-out;
   animation-iteration-count: infinite, infinite;
 }
+
+/* Buy Me a Coffee Button - Ensure visibility above all elements */
+.bmc-btn-container,
+#bmc-wbtn,
+.bmc-btn {
+  z-index: 9999 !important;
+}
