@@ -38,9 +38,9 @@ export const metadata: Metadata = {
     template: "%s | Abhijit Satyaki",
   },
   icons: {
-    icon: [{ url: "/images/logos/logo.png", sizes: "any" }],
-    shortcut: "/images/logos/logo.png",
-    apple: "/logo.png",
+    icon: [{ url: "/images/logos/logo.ico", sizes: "any" }],
+    shortcut: "/images/logos/logo.ico",
+    apple: "/images/logos/logo.ico",
   },
   description:
     "Portfolio of Abhijit Satyaki - Full Stack Developer, Lead Software Tester at edulink.dev, and B.Tech IT student at JGEC. Expert in React, Node.js, Python, Machine Learning, and Web Development. View my projects and get in touch.",
@@ -208,8 +208,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <link rel="icon" href="/images/logos/logo.png" sizes="any" />
-        <link rel="apple-touch-icon" href="/logo.png" />
+        <link rel="icon" href="/images/logos/logo.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/images/logos/logo.ico" />
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body
