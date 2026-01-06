@@ -1,9 +1,34 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Github, Linkedin, Mail, MapPin, Sparkles, Code2, Briefcase, GraduationCap, ChevronDown, Award, BookOpen, FileText, Quote, Star, User } from "lucide-react";
+import {
+  ArrowRight,
+  Github,
+  Linkedin,
+  Mail,
+  MapPin,
+  Sparkles,
+  Code2,
+  Briefcase,
+  GraduationCap,
+  ChevronDown,
+  Award,
+  BookOpen,
+  FileText,
+  Quote,
+  Star,
+  User,
+} from "lucide-react";
 import Image from "next/image";
-import { profile, skills, certifications, publications, services, stats, testimonials } from "@/data/profile";
+import {
+  profile,
+  skills,
+  certifications,
+  publications,
+  services,
+  stats,
+  testimonials,
+} from "@/data/profile";
 import { projects, categories } from "@/data/projects";
 import { experiences } from "@/data/experience";
 import AnimatedSection from "@/components/AnimatedSection";
@@ -15,30 +40,38 @@ import TechIcon from "@/components/TechIcon";
 import Modal from "@/components/Modal";
 import { useState, useEffect } from "react";
 
-
 // Animated typing effect for roles
-function TypeWriter({ texts, className }: { texts: string[]; className?: string }) {
+function TypeWriter({
+  texts,
+  className,
+}: {
+  texts: string[];
+  className?: string;
+}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      const fullText = texts[currentIndex];
+    const timeout = setTimeout(
+      () => {
+        const fullText = texts[currentIndex];
 
-      if (!isDeleting) {
-        setCurrentText(fullText.substring(0, currentText.length + 1));
-        if (currentText === fullText) {
-          setTimeout(() => setIsDeleting(true), 2000);
+        if (!isDeleting) {
+          setCurrentText(fullText.substring(0, currentText.length + 1));
+          if (currentText === fullText) {
+            setTimeout(() => setIsDeleting(true), 2000);
+          }
+        } else {
+          setCurrentText(fullText.substring(0, currentText.length - 1));
+          if (currentText === "") {
+            setIsDeleting(false);
+            setCurrentIndex((prev) => (prev + 1) % texts.length);
+          }
         }
-      } else {
-        setCurrentText(fullText.substring(0, currentText.length - 1));
-        if (currentText === "") {
-          setIsDeleting(false);
-          setCurrentIndex((prev) => (prev + 1) % texts.length);
-        }
-      }
-    }, isDeleting ? 50 : 100);
+      },
+      isDeleting ? 50 : 100,
+    );
 
     return () => clearTimeout(timeout);
   }, [currentText, isDeleting, currentIndex, texts]);
@@ -52,7 +85,15 @@ function TypeWriter({ texts, className }: { texts: string[]; className?: string 
 }
 
 // Stats component
-function StatCard({ value, label, icon: Icon }: { value: string; label: string; icon: React.ElementType }) {
+function StatCard({
+  value,
+  label,
+  icon: Icon,
+}: {
+  value: string;
+  label: string;
+  icon: React.ElementType;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -77,8 +118,14 @@ function StatCard({ value, label, icon: Icon }: { value: string; label: string; 
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("all");
-  const [selectedCert, setSelectedCert] = useState<{ name: string; image: string } | null>(null);
-  const [selectedService, setSelectedService] = useState<{ title: string; description: string } | null>(null);
+  const [selectedCert, setSelectedCert] = useState<{
+    name: string;
+    image: string;
+  } | null>(null);
+  const [selectedService, setSelectedService] = useState<{
+    title: string;
+    description: string;
+  } | null>(null);
 
   const filteredProjects =
     activeCategory === "all"
@@ -95,7 +142,10 @@ export default function Home() {
         {/* Ambient background orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[100px] animate-pulse-glow" />
-          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-500/15 rounded-full blur-[100px] animate-pulse-glow" style={{ animationDelay: "1.5s" }} />
+          <div
+            className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-500/15 rounded-full blur-[100px] animate-pulse-glow"
+            style={{ animationDelay: "1.5s" }}
+          />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
@@ -122,7 +172,9 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="text-4xl sm:text-5xl lg:text-7xl font-bold font-[family-name:var(--font-outfit)] mb-4 tracking-tight"
               >
-                <span className="text-slate-900 dark:text-white">Hi, I&apos;m </span>
+                <span className="text-slate-900 dark:text-white">
+                  Hi, I&apos;m{" "}
+                </span>
                 <span className="animated-gradient">{profile.name}</span>
               </motion.h1>
 
@@ -163,11 +215,16 @@ export default function Home() {
                   whileTap={{ scale: 0.98 }}
                   onClick={(e) => {
                     e.preventDefault();
-                    document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" });
+                    document
+                      .querySelector("#projects")
+                      ?.scrollIntoView({ behavior: "smooth" });
                   }}
                 >
                   View My Work
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight
+                    size={18}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
                 </motion.a>
                 <motion.a
                   href={profile.resumeLink}
@@ -177,7 +234,21 @@ export default function Home() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
                   Download CV
                 </motion.a>
               </motion.div>
@@ -190,14 +261,24 @@ export default function Home() {
                 className="flex items-center justify-center lg:justify-start gap-3"
               >
                 {[
-                  { href: profile.social.github, icon: Github, label: "GitHub" },
-                  { href: profile.social.linkedin, icon: Linkedin, label: "LinkedIn" },
+                  {
+                    href: profile.social.github,
+                    icon: Github,
+                    label: "GitHub",
+                  },
+                  {
+                    href: profile.social.linkedin,
+                    icon: Linkedin,
+                    label: "LinkedIn",
+                  },
                   { href: profile.social.email, icon: Mail, label: "Email" },
                 ].map((social) => (
                   <motion.a
                     key={social.label}
                     href={social.href}
-                    target={social.href.startsWith("mailto") ? undefined : "_blank"}
+                    target={
+                      social.href.startsWith("mailto") ? undefined : "_blank"
+                    }
                     rel="noopener noreferrer"
                     className="p-3 rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-300 shadow-sm"
                     whileHover={{ y: -4, scale: 1.05 }}
@@ -239,7 +320,11 @@ export default function Home() {
                 <motion.div
                   className="absolute -top-2 -right-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700"
                   animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 >
                   <span className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -251,7 +336,12 @@ export default function Home() {
                 <motion.div
                   className="absolute -bottom-2 -left-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700"
                   animate={{ y: [0, 8, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1.5,
+                  }}
                 >
                   <span className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
                     <MapPin size={14} className="text-indigo-500" />
@@ -273,13 +363,17 @@ export default function Home() {
               href="#about"
               onClick={(e) => {
                 e.preventDefault();
-                document.querySelector("#about")?.scrollIntoView({ behavior: "smooth" });
+                document
+                  .querySelector("#about")
+                  ?.scrollIntoView({ behavior: "smooth" });
               }}
               className="flex flex-col items-center gap-2 text-slate-400 hover:text-indigo-500 transition-colors cursor-pointer"
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <span className="text-sm font-medium tracking-wide uppercase">Scroll</span>
+              <span className="text-sm font-medium tracking-wide uppercase">
+                Scroll
+              </span>
               <ChevronDown size={20} />
             </motion.a>
           </motion.div>
@@ -291,7 +385,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <StatCard value="2+" label="Years Experience" icon={Briefcase} />
-            <StatCard value={`${projects.length}+`} label="Projects Built" icon={Code2} />
+            <StatCard
+              value={`${projects.length}+`}
+              label="Projects Built"
+              icon={Code2}
+            />
             <StatCard value="10+" label="Technologies" icon={Sparkles} />
             <StatCard value="B.Tech" label="IT Student" icon={GraduationCap} />
           </div>
@@ -311,7 +409,8 @@ export default function Home() {
                 <span className="animated-gradient">Offer</span>
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
-                Specialized services to help bring your ideas to life with cutting-edge technology
+                Specialized services to help bring your ideas to life with
+                cutting-edge technology
               </p>
             </div>
           </AnimatedSection>
@@ -323,16 +422,33 @@ export default function Home() {
                   whileHover={{ y: -8, scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                   className="group premium-card rounded-2xl p-6 h-full cursor-pointer"
-                  onClick={() => setSelectedService({ title: service.title, description: service.description })}
+                  onClick={() =>
+                    setSelectedService({
+                      title: service.title,
+                      description: service.description,
+                    })
+                  }
                 >
                   {/* Icon */}
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                    {service.icon === "desktop" && <Code2 size={24} className="text-white" />}
-                    {service.icon === "robot" && <Sparkles size={24} className="text-white" />}
-                    {service.icon === "paint-brush" && <Award size={24} className="text-white" />}
-                    {service.icon === "users" && <User size={24} className="text-white" />}
-                    {service.icon === "bullhorn" && <BookOpen size={24} className="text-white" />}
-                    {service.icon === "code" && <Code2 size={24} className="text-white" />}
+                    {service.icon === "desktop" && (
+                      <Code2 size={24} className="text-white" />
+                    )}
+                    {service.icon === "robot" && (
+                      <Sparkles size={24} className="text-white" />
+                    )}
+                    {service.icon === "paint-brush" && (
+                      <Award size={24} className="text-white" />
+                    )}
+                    {service.icon === "users" && (
+                      <User size={24} className="text-white" />
+                    )}
+                    {service.icon === "bullhorn" && (
+                      <BookOpen size={24} className="text-white" />
+                    )}
+                    {service.icon === "code" && (
+                      <Code2 size={24} className="text-white" />
+                    )}
                   </div>
 
                   {/* Title */}
@@ -358,7 +474,10 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-24 lg:py-32 bg-white dark:bg-slate-900/50">
+      <section
+        id="about"
+        className="py-24 lg:py-32 bg-white dark:bg-slate-900/50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
@@ -366,11 +485,14 @@ export default function Home() {
                 About Me
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-outfit)] mb-6">
-                <span className="text-slate-900 dark:text-white">Passionate About </span>
+                <span className="text-slate-900 dark:text-white">
+                  Passionate About{" "}
+                </span>
                 <span className="animated-gradient">Building Solutions</span>
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
-                Get to know more about my journey, skills, and what drives me to create impactful software.
+                Get to know more about my journey, skills, and what drives me to
+                create impactful software.
               </p>
             </div>
           </AnimatedSection>
@@ -391,22 +513,32 @@ export default function Home() {
                       className="rounded-full border-4 border-indigo-500/30 relative z-10"
                     />
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{profile.name}</h3>
-                  <p className="text-indigo-600 dark:text-indigo-400 font-medium mb-4">{profile.title}</p>
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                    {profile.name}
+                  </h3>
+                  <p className="text-indigo-600 dark:text-indigo-400 font-medium mb-4">
+                    {profile.title}
+                  </p>
 
                   {/* Quick Info */}
                   <div className="space-y-3 w-full">
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                       <MapPin size={18} className="text-indigo-500" />
-                      <span className="text-slate-700 dark:text-slate-300">{profile.location}</span>
+                      <span className="text-slate-700 dark:text-slate-300">
+                        {profile.location}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                       <GraduationCap size={18} className="text-indigo-500" />
-                      <span className="text-slate-700 dark:text-slate-300">B.Tech in IT @ JGEC</span>
+                      <span className="text-slate-700 dark:text-slate-300">
+                        B.Tech in IT @ JGEC
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                       <Briefcase size={18} className="text-indigo-500" />
-                      <span className="text-slate-700 dark:text-slate-300">2+ Years Experience</span>
+                      <span className="text-slate-700 dark:text-slate-300">
+                        2+ Years Experience
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -462,7 +594,11 @@ export default function Home() {
                           <motion.div
                             initial={{ width: 0 }}
                             whileInView={{ width: `${skill.level}%` }}
-                            transition={{ duration: 1, delay: index * 0.08, ease: "easeOut" }}
+                            transition={{
+                              duration: 1,
+                              delay: index * 0.08,
+                              ease: "easeOut",
+                            }}
                             viewport={{ once: true }}
                             className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"
                           />
@@ -516,7 +652,9 @@ export default function Home() {
                         className="flex items-center gap-2 p-2.5 rounded-lg bg-amber-500/5 border border-amber-200/50 dark:border-amber-800/50"
                       >
                         <Sparkles size={14} className="text-amber-500" />
-                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{skill}</span>
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                          {skill}
+                        </span>
                       </motion.div>
                     ))}
                   </div>
@@ -555,7 +693,11 @@ export default function Home() {
                           <motion.div
                             initial={{ width: 0 }}
                             whileInView={{ width: `${skill.level}%` }}
-                            transition={{ duration: 1, delay: index * 0.08, ease: "easeOut" }}
+                            transition={{
+                              duration: 1,
+                              delay: index * 0.08,
+                              ease: "easeOut",
+                            }}
                             viewport={{ once: true }}
                             className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
                           />
@@ -573,7 +715,7 @@ export default function Home() {
                     <span className="w-3 h-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" />
                     Tools & Technologies
                   </h4>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                     {skills.tools.map((skill, index) => (
                       <motion.div
                         key={skill.name}
@@ -601,7 +743,10 @@ export default function Home() {
       </section>
 
       {/* Work Experience Section */}
-      <section id="experience" className="py-24 lg:py-32 bg-white dark:bg-slate-900/50">
+      <section
+        id="experience"
+        className="py-24 lg:py-32 bg-white dark:bg-slate-900/50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
@@ -619,9 +764,15 @@ export default function Home() {
           </AnimatedSection>
 
           <div className="relative space-y-8">
-            {experiences.filter(exp => exp.type === "work").map((experience, index) => (
-              <TimelineItem key={experience.id} experience={experience} index={index} />
-            ))}
+            {experiences
+              .filter((exp) => exp.type === "work")
+              .map((experience, index) => (
+                <TimelineItem
+                  key={experience.id}
+                  experience={experience}
+                  index={index}
+                />
+              ))}
           </div>
         </div>
       </section>
@@ -635,7 +786,9 @@ export default function Home() {
                 Education
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-outfit)] mb-6">
-                <span className="text-slate-900 dark:text-white">Academic </span>
+                <span className="text-slate-900 dark:text-white">
+                  Academic{" "}
+                </span>
                 <span className="animated-gradient">Background</span>
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
@@ -645,15 +798,24 @@ export default function Home() {
           </AnimatedSection>
 
           <div className="relative space-y-8">
-            {experiences.filter(exp => exp.type === "education").map((experience, index) => (
-              <TimelineItem key={experience.id} experience={experience} index={index} />
-            ))}
+            {experiences
+              .filter((exp) => exp.type === "education")
+              .map((experience, index) => (
+                <TimelineItem
+                  key={experience.id}
+                  experience={experience}
+                  index={index}
+                />
+              ))}
           </div>
         </div>
       </section>
 
       {/* Publications Section */}
-      <section id="publications" className="py-24 lg:py-32 bg-white dark:bg-slate-900/50">
+      <section
+        id="publications"
+        className="py-24 lg:py-32 bg-white dark:bg-slate-900/50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
@@ -665,7 +827,8 @@ export default function Home() {
                 <span className="animated-gradient">Publications</span>
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
-                Research publications and academic contributions in technology and security
+                Research publications and academic contributions in technology
+                and security
               </p>
             </div>
           </AnimatedSection>
@@ -679,15 +842,26 @@ export default function Home() {
                       <FileText size={24} />
                     </div>
                     <div>
-                      <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">{pub.year}</span>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1">{pub.title}</h3>
+                      <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                        {pub.year}
+                      </span>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1">
+                        {pub.title}
+                      </h3>
                     </div>
                   </div>
-                  <p className="text-indigo-600 dark:text-indigo-400 font-medium text-sm mb-3">{pub.venue}</p>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">{pub.description}</p>
+                  <p className="text-indigo-600 dark:text-indigo-400 font-medium text-sm mb-3">
+                    {pub.venue}
+                  </p>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">
+                    {pub.description}
+                  </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {pub.tags.map((tag) => (
-                      <span key={tag} className="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                      <span
+                        key={tag}
+                        className="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                      >
                         {tag}
                       </span>
                     ))}
@@ -713,11 +887,14 @@ export default function Home() {
                 Portfolio
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-outfit)] mb-6">
-                <span className="text-slate-900 dark:text-white">Featured </span>
+                <span className="text-slate-900 dark:text-white">
+                  Featured{" "}
+                </span>
                 <span className="animated-gradient">Projects</span>
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
-                A showcase of my best work — from web applications to machine learning projects.
+                A showcase of my best work — from web applications to machine
+                learning projects.
               </p>
             </div>
           </AnimatedSection>
@@ -729,10 +906,11 @@ export default function Home() {
                 <motion.button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${activeCategory === cat.id
-                    ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25"
-                    : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600"
-                    }`}
+                  className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                    activeCategory === cat.id
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25"
+                      : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600"
+                  }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -780,7 +958,9 @@ export default function Home() {
                 Credentials
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-outfit)] mb-6">
-                <span className="text-slate-900 dark:text-white">Professional </span>
+                <span className="text-slate-900 dark:text-white">
+                  Professional{" "}
+                </span>
                 <span className="animated-gradient">Certifications</span>
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
@@ -801,13 +981,24 @@ export default function Home() {
                       Verified
                     </span>
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{cert.name}</h3>
-                  <p className="text-indigo-600 dark:text-indigo-400 font-medium text-sm mb-1">{cert.issuer}</p>
-                  <p className="text-slate-500 dark:text-slate-500 text-sm mb-3">Completed: {cert.year}</p>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 flex-grow">{cert.description}</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                    {cert.name}
+                  </h3>
+                  <p className="text-indigo-600 dark:text-indigo-400 font-medium text-sm mb-1">
+                    {cert.issuer}
+                  </p>
+                  <p className="text-slate-500 dark:text-slate-500 text-sm mb-3">
+                    Completed: {cert.year}
+                  </p>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 flex-grow">
+                    {cert.description}
+                  </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {cert.skills.map((skill) => (
-                      <span key={skill} className="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                      <span
+                        key={skill}
+                        className="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                      >
                         {skill}
                       </span>
                     ))}
@@ -816,8 +1007,14 @@ export default function Home() {
                   {(cert as { image?: string }).image && (
                     <button
                       onClick={() => {
-                        const certWithImage = cert as { name: string; image?: string };
-                        setSelectedCert({ name: cert.name, image: certWithImage.image! });
+                        const certWithImage = cert as {
+                          name: string;
+                          image?: string;
+                        };
+                        setSelectedCert({
+                          name: cert.name,
+                          image: certWithImage.image!,
+                        });
                       }}
                       className="w-full mt-auto py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold text-sm hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 flex items-center justify-center gap-2"
                     >
@@ -833,7 +1030,10 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-24 lg:py-32 bg-white dark:bg-slate-900/50">
+      <section
+        id="testimonials"
+        className="py-24 lg:py-32 bg-white dark:bg-slate-900/50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
@@ -841,11 +1041,14 @@ export default function Home() {
                 Testimonials
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-outfit)] mb-6">
-                <span className="text-slate-900 dark:text-white">What People </span>
+                <span className="text-slate-900 dark:text-white">
+                  What People{" "}
+                </span>
                 <span className="animated-gradient">Say</span>
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
-                Feedback from colleagues, mentors, and collaborators who have worked with me
+                Feedback from colleagues, mentors, and collaborators who have
+                worked with me
               </p>
             </div>
           </AnimatedSection>
@@ -867,7 +1070,11 @@ export default function Home() {
                   {/* Rating */}
                   <div className="flex gap-1 mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} size={16} className="text-amber-400 fill-amber-400" />
+                      <Star
+                        key={i}
+                        size={16}
+                        className="text-amber-400 fill-amber-400"
+                      />
                     ))}
                   </div>
 
@@ -877,9 +1084,15 @@ export default function Home() {
                       <User size={20} />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-slate-900 dark:text-white">{testimonial.name}</h4>
-                      <p className="text-sm text-slate-500 dark:text-slate-500">{testimonial.organization}</p>
-                      <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">{testimonial.role}</span>
+                      <h4 className="font-semibold text-slate-900 dark:text-white">
+                        {testimonial.name}
+                      </h4>
+                      <p className="text-sm text-slate-500 dark:text-slate-500">
+                        {testimonial.organization}
+                      </p>
+                      <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
+                        {testimonial.role}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -890,13 +1103,20 @@ export default function Home() {
           {/* CTA */}
           <AnimatedSection delay={0.4}>
             <div className="text-center mt-12 p-8 premium-card rounded-2xl">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Want to work together?</h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-6">I&apos;m always open to discussing new opportunities and exciting projects.</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                Want to work together?
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400 mb-6">
+                I&apos;m always open to discussing new opportunities and
+                exciting projects.
+              </p>
               <motion.a
                 href="#contact"
                 onClick={(e) => {
                   e.preventDefault();
-                  document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
+                  document
+                    .querySelector("#contact")
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all"
                 whileHover={{ scale: 1.02 }}
@@ -908,10 +1128,13 @@ export default function Home() {
             </div>
           </AnimatedSection>
         </div>
-      </section >
+      </section>
 
       {/* Contact Section */}
-      < section id="contact" className="py-24 lg:py-32 bg-white dark:bg-slate-900/50" >
+      <section
+        id="contact"
+        className="py-24 lg:py-32 bg-white dark:bg-slate-900/50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
@@ -919,11 +1142,14 @@ export default function Home() {
                 Contact
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-outfit)] mb-6">
-                <span className="text-slate-900 dark:text-white">Let&apos;s Work </span>
+                <span className="text-slate-900 dark:text-white">
+                  Let&apos;s Work{" "}
+                </span>
                 <span className="animated-gradient">Together</span>
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
-                Have a project in mind or want to discuss opportunities? I&apos;d love to hear from you.
+                Have a project in mind or want to discuss opportunities?
+                I&apos;d love to hear from you.
               </p>
             </div>
           </AnimatedSection>
@@ -937,21 +1163,41 @@ export default function Home() {
                     Get in Touch
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400 mb-8 text-lg leading-relaxed">
-                    I&apos;m currently open to freelance projects, full-time opportunities,
-                    and interesting collaborations. Whether you have a question or just
-                    want to say hi, my inbox is always open!
+                    I&apos;m currently open to freelance projects, full-time
+                    opportunities, and interesting collaborations. Whether you
+                    have a question or just want to say hi, my inbox is always
+                    open!
                   </p>
 
                   <div className="space-y-4">
                     {[
-                      { icon: Mail, label: "Email", value: profile.email, href: profile.social.email },
-                      { icon: Github, label: "GitHub", value: "@satyakiabhijit", href: profile.social.github },
-                      { icon: Linkedin, label: "LinkedIn", value: "Abhijit Satyaki", href: profile.social.linkedin },
+                      {
+                        icon: Mail,
+                        label: "Email",
+                        value: profile.email,
+                        href: profile.social.email,
+                      },
+                      {
+                        icon: Github,
+                        label: "GitHub",
+                        value: "@satyakiabhijit",
+                        href: profile.social.github,
+                      },
+                      {
+                        icon: Linkedin,
+                        label: "LinkedIn",
+                        value: "Abhijit Satyaki",
+                        href: profile.social.linkedin,
+                      },
                     ].map((contact) => (
                       <a
                         key={contact.label}
                         href={contact.href}
-                        target={contact.href.startsWith("mailto") ? undefined : "_blank"}
+                        target={
+                          contact.href.startsWith("mailto")
+                            ? undefined
+                            : "_blank"
+                        }
                         rel="noopener noreferrer"
                         className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-300 group"
                       >
@@ -959,7 +1205,9 @@ export default function Home() {
                           <contact.icon size={20} />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm text-slate-500 dark:text-slate-500">{contact.label}</p>
+                          <p className="text-sm text-slate-500 dark:text-slate-500">
+                            {contact.label}
+                          </p>
                           <p className="font-semibold text-slate-900 dark:text-white break-all">
                             {contact.value}
                           </p>
