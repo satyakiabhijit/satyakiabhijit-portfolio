@@ -200,7 +200,7 @@ export default function Navbar() {
                 }}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: navLinks.length * 0.1 }}
+                transition={{ delay: (navLinks.length + 1) * 0.1 }}
                 className="block py-3 px-4 mt-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold text-center"
               >
                 Hire Me

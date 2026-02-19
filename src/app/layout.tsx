@@ -3,9 +3,7 @@ import { Inter, Outfit } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import LazyWinterEffects from "@/components/LazyWinterEffects";
+import ConditionalLayout from "@/components/ConditionalLayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -216,10 +214,7 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} antialiased min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100`}
       >
         <ThemeProvider>
-          <LazyWinterEffects />
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
+          <ConditionalLayout>{children}</ConditionalLayout>
         </ThemeProvider>
         {/* Buy Me a Coffee Button */}
         <Script

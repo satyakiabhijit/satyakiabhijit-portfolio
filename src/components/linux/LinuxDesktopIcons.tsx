@@ -1,0 +1,73 @@
+"use client";
+
+import { Folder, Terminal, FileText } from "lucide-react";
+import { useTheme } from "@/components/ThemeProvider";
+
+const icons = [
+  {
+    name: "Home",
+    icon: Folder,
+    action: "files",
+    color: "text-amber-500",
+  },
+  {
+    name: "Terminal",
+    icon: Terminal,
+    action: "terminal",
+    color: "text-green-500",
+  },
+  {
+    name: "about.txt",
+    icon: FileText,
+    action: "about",
+    color: "text-blue-400",
+  },
+];
+
+export default function LinuxDesktopIcons({
+  onOpenFiles,
+  onOpenTerminal,
+  onOpenFile,
+}: {
+  onOpenFiles: () => void;
+  onOpenTerminal: () => void;
+  onOpenFile?: (fileName: string) => void;
+}) {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
+
+  const handleDoubleClick = (action: string) => {
+    if (action === "files") onOpenFiles();
+    else if (action === "terminal") onOpenTerminal();
+    else if (action === "about" && onOpenFile) onOpenFile("about.txt");
+  };
+
+  return (
+    <div className="absolute inset-0 pt-24 pl-8 flex flex-col gap-6">
+      {icons.map((item) => (
+        <button
+          key={item.name}
+          onDoubleClick={() => handleDoubleClick(item.action)}
+          className="flex flex-col items-center gap-2 w-20 group cursor-pointer"
+        >
+          <div
+            className={`w-16 h-16 rounded-xl flex items-center justify-center ${item.color} transition-colors ${
+              isLight ? "bg-white/40 group-hover:bg-white/60" : "bg-black/20 group-hover:bg-white/10"
+            }`}
+          >
+            <item.icon size={32} />
+          </div>
+          <span
+            className={`text-sm text-center rounded px-2 py-0.5 drop-shadow-lg ${
+              isLight
+                ? "text-gray-800 group-hover:bg-white/60"
+                : "text-white group-hover:bg-white/20"
+            }`}
+          >
+            {item.name}
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}

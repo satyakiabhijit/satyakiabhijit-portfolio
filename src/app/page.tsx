@@ -18,7 +18,9 @@ import {
   Quote,
   Star,
   User,
+  Terminal,
 } from "lucide-react";
+import Link from "next/link";
 import Image from "next/image";
 import {
   profile,
@@ -200,6 +202,25 @@ export default function Home() {
               >
                 {profile.tagline}
               </motion.p>
+
+              {/* Switch to Linux Mode */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.35 }}
+                className="mb-4"
+              >
+                <Link href="/linux">
+                  <motion.div
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 border border-slate-200 dark:border-slate-700 hover:border-green-300 dark:hover:border-green-600 transition-all duration-300 cursor-pointer"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Terminal size={18} />
+                    <span className="font-medium">Switch to Linux Mode</span>
+                  </motion.div>
+                </Link>
+              </motion.div>
 
               {/* CTA Buttons */}
               <motion.div
