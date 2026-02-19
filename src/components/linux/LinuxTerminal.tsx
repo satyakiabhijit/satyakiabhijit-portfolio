@@ -1,12 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useTheme } from "@/components/ThemeProvider";
 import {
-  virtualFileSystem,
   getFileContent,
   listDir,
-  VirtualFile,
 } from "@/data/linuxFiles";
 import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
@@ -35,8 +32,6 @@ function resolvePath(currentPath: string, input: string): string {
 }
 
 export default function LinuxTerminal({ hideTitleBar = false }: { hideTitleBar?: boolean }) {
-  const { theme } = useTheme();
-  const isLight = theme === "light";
   const [history, setHistory] = useState<{ cmd: string; output: string[] }[]>([
     {
       cmd: "",
@@ -163,24 +158,16 @@ export default function LinuxTerminal({ hideTitleBar = false }: { hideTitleBar?:
   return (
     <div
       ref={containerRef}
-      className={`h-full font-mono text-sm flex flex-col overflow-auto rounded-b ${
-        isLight
-          ? "bg-[#f5f5f5] text-green-800"
-          : "bg-[#1e1e1e] text-green-400"
-      }`}
+      className="h-full font-mono text-sm flex flex-col overflow-auto rounded-b bg-[#1e1e1e] text-green-400"
     >
       {!hideTitleBar && (
-        <div
-          className={`flex items-center gap-2 px-3 py-2 border-b ${
-            isLight ? "bg-[#e5e5e5] border-[#d4d4d4]" : "bg-[#2d2d2d] border-[#3d3d3d]"
-          }`}
-        >
+        <div className="flex items-center gap-2 px-3 py-2 border-b bg-[#2d2d2d] border-[#3d3d3d]">
           <div className="flex gap-1.5">
             <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
             <span className="w-3 h-3 rounded-full bg-[#febc2e]" />
             <span className="w-3 h-3 rounded-full bg-[#28c840]" />
           </div>
-          <span className={`text-xs ml-2 ${isLight ? "text-gray-600" : "text-gray-400"}`}>bash — portfolio</span>
+          <span className="text-xs ml-2 text-gray-400">bash - portfolio</span>
         </div>
       )}
 
@@ -189,25 +176,25 @@ export default function LinuxTerminal({ hideTitleBar = false }: { hideTitleBar?:
           <div key={i} className="mb-2">
             {h.cmd && (
               <div className="flex">
-                <span className={`shrink-0 ${isLight ? "text-cyan-700" : "text-cyan-400"}`}>{prompt}</span>
+                <span className="shrink-0 text-cyan-400">{prompt}</span>
                 <span>{h.cmd}</span>
               </div>
             )}
             {h.output.length > 0 && (
-              <pre className={`whitespace-pre-wrap break-words mt-1 font-mono text-[13px] ${isLight ? "text-gray-700" : "text-gray-300"}`}>
+              <pre className="whitespace-pre-wrap break-words mt-1 font-mono text-[13px] text-gray-300">
                 {h.output.join("\n")}
               </pre>
             )}
           </div>
         ))}
         <form onSubmit={handleSubmit} className="flex">
-          <span className={`shrink-0 ${isLight ? "text-cyan-700" : "text-cyan-400"}`}>{prompt}</span>
+          <span className="shrink-0 text-cyan-400">{prompt}</span>
           <input
             ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className={`flex-1 bg-transparent border-none outline-none font-mono ml-0 ${isLight ? "text-green-800" : "text-green-400"}`}
+            className="flex-1 bg-transparent border-none outline-none font-mono ml-0 text-green-400"
             autoFocus
             spellCheck={false}
           />

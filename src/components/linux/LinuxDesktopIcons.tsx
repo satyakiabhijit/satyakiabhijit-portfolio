@@ -1,7 +1,6 @@
 "use client";
 
 import { Folder, Terminal, FileText } from "lucide-react";
-import { useTheme } from "@/components/ThemeProvider";
 
 const icons = [
   {
@@ -33,9 +32,6 @@ export default function LinuxDesktopIcons({
   onOpenTerminal: () => void;
   onOpenFile?: (fileName: string) => void;
 }) {
-  const { theme } = useTheme();
-  const isLight = theme === "light";
-
   const handleDoubleClick = (action: string) => {
     if (action === "files") onOpenFiles();
     else if (action === "terminal") onOpenTerminal();
@@ -51,18 +47,12 @@ export default function LinuxDesktopIcons({
           className="flex flex-col items-center gap-2 w-20 group cursor-pointer"
         >
           <div
-            className={`w-16 h-16 rounded-xl flex items-center justify-center ${item.color} transition-colors ${
-              isLight ? "bg-white/40 group-hover:bg-white/60" : "bg-black/20 group-hover:bg-white/10"
-            }`}
+            className={`w-16 h-16 rounded-xl flex items-center justify-center ${item.color} transition-colors bg-black/20 group-hover:bg-white/10`}
           >
             <item.icon size={32} />
           </div>
           <span
-            className={`text-sm text-center rounded px-2 py-0.5 drop-shadow-lg ${
-              isLight
-                ? "text-gray-800 group-hover:bg-white/60"
-                : "text-white group-hover:bg-white/20"
-            }`}
+            className="text-sm text-center rounded px-2 py-0.5 drop-shadow-lg text-white group-hover:bg-white/20"
           >
             {item.name}
           </span>

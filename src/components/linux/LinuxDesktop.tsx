@@ -6,7 +6,6 @@ import LinuxTopBar from "./LinuxTopBar";
 import LinuxFileManager from "./LinuxFileManager";
 import LinuxTerminal from "./LinuxTerminal";
 import LinuxDesktopIcons from "./LinuxDesktopIcons";
-import { useTheme } from "@/components/ThemeProvider";
 
 type WindowType = "files" | "terminal" | null;
 
@@ -28,8 +27,6 @@ interface WindowState {
 }
 
 export default function LinuxDesktop() {
-  const { theme } = useTheme();
-  const isLight = theme === "light";
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [activeWindow, setActiveWindow] = useState<string | null>(null);
   const [dragState, setDragState] = useState<{
@@ -215,11 +212,7 @@ export default function LinuxDesktop() {
   const visibleWindows = windows.filter((w) => !w.minimized);
 
   return (
-    <div
-      className={`h-screen flex flex-col overflow-hidden ${
-        isLight ? "bg-[#c4b5fd]" : "bg-[#1a1a2e]"
-      }`}
-    >
+    <div className="h-screen flex flex-col overflow-hidden bg-[#2c001e]">
       <LinuxTopBar onOpenFiles={() => openWindow("files")} onOpenTerminal={() => openWindow("terminal")} />
 
       {/* Desktop background with subtle pattern */}
@@ -227,8 +220,8 @@ export default function LinuxDesktop() {
         <div
           className="absolute inset-0 opacity-30"
           style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, #6366f1 0%, transparent 50%),
-                             radial-gradient(circle at 75% 75%, #8b5cf6 0%, transparent 50%)`,
+            backgroundImage: `radial-gradient(circle at 20% 20%, #e95420 0%, transparent 45%),
+                 radial-gradient(circle at 78% 72%, #77216f 0%, transparent 50%)`,
           }}
         />
         <div
@@ -247,21 +240,13 @@ export default function LinuxDesktop() {
         {/* Taskbar for minimized windows */}
         {minimizedWindows.length > 0 && (
           <div
-            className={`absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 px-4 py-2 rounded-xl backdrop-blur border ${
-              isLight
-                ? "bg-white/90 border-gray-300"
-                : "bg-[#2d2d2d]/90 border-[#3d3d3d]"
-            }`}
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 px-4 py-2 rounded-xl backdrop-blur border bg-[#2d2d2d]/90 border-[#3d3d3d]"
           >
             {minimizedWindows.map((w) => (
               <button
                 key={w.id}
                 onClick={() => restoreWindow(w.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isLight
-                    ? "bg-gray-200 hover:bg-indigo-500 hover:text-white text-gray-700"
-                    : "bg-[#3d3d3d] hover:bg-indigo-600/50 text-gray-300 hover:text-white"
-                }`}
+                className="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-[#3d3d3d] hover:bg-indigo-600/50 text-gray-300 hover:text-white"
               >
                 {w.type === "files" ? "Files" : "Terminal"}
               </button>
@@ -296,9 +281,7 @@ export default function LinuxDesktop() {
             >
               {/* Draggable title bar */}
               <div
-                className={`flex items-center gap-2 px-3 py-2 border-b cursor-grab active:cursor-grabbing shrink-0 ${
-                  isLight ? "bg-[#e5e7eb] border-[#d1d5db]" : "bg-[#3d3d3d] border-[#4d4d4d]"
-                }`}
+                className="flex items-center gap-2 px-3 py-2 border-b cursor-grab active:cursor-grabbing shrink-0 bg-[#3d3d3d] border-[#4d4d4d]"
                 onMouseDown={(e) => handleTitleBarMouseDown(e, w.id)}
               >
                 <div className="flex gap-1.5 shrink-0">
@@ -341,9 +324,7 @@ export default function LinuxDesktop() {
                   </button>
                 </div>
                 <span
-                  className={`text-sm ml-2 truncate flex-1 ${
-                    isLight ? "text-gray-700" : "text-gray-300"
-                  }`}
+                  className="text-sm ml-2 truncate flex-1 text-gray-300"
                 >
                   {w.type === "files" ? "Files — Home" : "Terminal"}
                 </span>
