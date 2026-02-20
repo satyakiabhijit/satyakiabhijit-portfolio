@@ -115,7 +115,7 @@ export default function SeasonEffects() {
     let ignore = false;
     const loadTheme = async () => {
       try {
-        const res = await fetch(`/site-theme.json?t=${Date.now()}`, {
+        const res = await fetch(`/api/site-theme?t=${Date.now()}`, {
           cache: "no-store",
         });
         if (!res.ok) return;

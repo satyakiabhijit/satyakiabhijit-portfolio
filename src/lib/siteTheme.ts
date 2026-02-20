@@ -10,11 +10,17 @@ interface SiteThemeConfig {
   updatedAt: string;
 }
 
+interface SetThemeResult {
+  ok: boolean;
+  persisted: boolean;
+}
+
 const SITE_THEME_FILE = path.join(process.cwd(), "public", "site-theme.json");
 const DEFAULT_THEME: SiteThemeConfig = {
   season: "winter",
   updatedAt: new Date().toISOString(),
 };
+let runtimeTheme: SiteThemeConfig | null = null;
 
 function normalizeTheme(value: string | undefined): SeasonTheme {
   if (
@@ -31,6 +37,10 @@ function normalizeTheme(value: string | undefined): SeasonTheme {
 }
 
 export async function getSiteTheme(): Promise<SiteThemeConfig> {
+  if (runtimeTheme) {
+    return runtimeTheme;
+  }
+
   try {
     const raw = await readFile(SITE_THEME_FILE, "utf8");
     const parsed = JSON.parse(raw) as Partial<SiteThemeConfig>;
@@ -49,15 +59,23 @@ export async function getSiteTheme(): Promise<SiteThemeConfig> {
     } catch {
       // Ignore write errors on read-only hosting and continue with defaults.
     }
-    return DEFAULT_THEME;
+    runtimeTheme = DEFAULT_THEME;
+    return runtimeTheme;
   }
 }
 
-export async function setSiteTheme(season: SeasonTheme) {
+export async function setSiteTheme(season: SeasonTheme): Promise<SetThemeResult> {
   const nextConfig: SiteThemeConfig = {
     season,
     updatedAt: new Date().toISOString(),
   };
-  await mkdir(path.dirname(SITE_THEME_FILE), { recursive: true });
-  await writeFile(SITE_THEME_FILE, JSON.stringify(nextConfig, null, 2), "utf8");
+  runtimeTheme = nextConfig;
+
+  try {
+    await mkdir(path.dirname(SITE_THEME_FILE), { recursive: true });
+    await writeFile(SITE_THEME_FILE, JSON.stringify(nextConfig, null, 2), "utf8");
+    return { ok: true, persisted: true };
+  } catch {
+    return { ok: true, persisted: false };
+  }
 }

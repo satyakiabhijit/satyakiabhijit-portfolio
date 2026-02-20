@@ -16,13 +16,14 @@ export const metadata: Metadata = {
 const successMessages: Record<string, string> = {
   login: "Logged in.",
   season: "Season theme updated.",
+  "season-volatile":
+    "Season theme updated for the current runtime (read-only host, not persistent).",
   password: "Password changed successfully.",
 };
 
 const errorMessages: Record<string, string> = {
   season: "Invalid season value.",
-  "theme-write":
-    "Theme update failed because this host filesystem is read-only.",
+  "theme-write-fail": "Theme update failed.",
   "password-missing": "Fill all password fields.",
   "password-mismatch": "New password and confirmation do not match.",
 };

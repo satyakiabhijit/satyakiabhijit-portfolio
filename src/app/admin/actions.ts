@@ -60,10 +60,12 @@ export async function updateSeasonAction(formData: FormData) {
     redirect("/admin?error=season");
   }
 
-  try {
-    await setSiteTheme(season);
-  } catch {
-    redirect("/admin?error=theme-write");
+  const result = await setSiteTheme(season);
+  if (!result.ok) {
+    redirect("/admin?error=theme-write-fail");
+  }
+  if (!result.persisted) {
+    redirect("/admin?ok=season-volatile");
   }
   redirect("/admin?ok=season");
 }
