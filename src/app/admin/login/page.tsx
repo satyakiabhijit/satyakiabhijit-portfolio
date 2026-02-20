@@ -12,6 +12,7 @@ const errorMessages: Record<string, string> = {
   missing: "Enter both username and password.",
   invalid: "Invalid username or password.",
   auth: "Please sign in to continue.",
+  setup: "Admin setup is incomplete. Check server env vars.",
 };
 
 const successMessages: Record<string, string> = {

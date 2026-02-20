@@ -21,6 +21,8 @@ const successMessages: Record<string, string> = {
 
 const errorMessages: Record<string, string> = {
   season: "Invalid season value.",
+  "theme-write":
+    "Theme update failed because this host filesystem is read-only.",
   "password-missing": "Fill all password fields.",
   "password-mismatch": "New password and confirmation do not match.",
 };

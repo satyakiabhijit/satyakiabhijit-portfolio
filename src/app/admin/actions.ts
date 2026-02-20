@@ -37,7 +37,10 @@ export async function loginAction(formData: FormData) {
     redirect("/admin/login?error=invalid");
   }
 
-  await setAdminSession(username);
+  const sessionSet = await setAdminSession(username);
+  if (!sessionSet) {
+    redirect("/admin/login?error=setup");
+  }
   redirect("/admin?ok=login");
 }
 
@@ -57,7 +60,11 @@ export async function updateSeasonAction(formData: FormData) {
     redirect("/admin?error=season");
   }
 
-  await setSiteTheme(season);
+  try {
+    await setSiteTheme(season);
+  } catch {
+    redirect("/admin?error=theme-write");
+  }
   redirect("/admin?ok=season");
 }
 

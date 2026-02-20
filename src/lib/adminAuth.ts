@@ -5,7 +5,12 @@ import { createHmac, pbkdf2Sync, randomBytes, timingSafeEqual } from "crypto";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
 
-const ADMIN_FILE_PATH = path.join(process.cwd(), ".secure", "admin-auth.json");
+const ADMIN_STORAGE_DIR =
+  process.env.ADMIN_DATA_DIR?.trim() ||
+  (process.env.VERCEL
+    ? path.join("/tmp", "satyakiabhijit-admin")
+    : path.join(process.cwd(), ".secure"));
+const ADMIN_FILE_PATH = path.join(ADMIN_STORAGE_DIR, "admin-auth.json");
 const ADMIN_COOKIE_NAME = "admin_session";
 const PASSWORD_DIGEST = "sha512";
 const PASSWORD_ITERATIONS = 120000;
@@ -27,6 +32,11 @@ interface SessionPayload {
   exp: number;
 }
 
+interface EnsureConfigResult {
+  config: StoredAdminConfig | null;
+  reason?: string;
+}
+
 function toBase64Url(input: Buffer | string): string {
   return Buffer.from(input)
     .toString("base64")
@@ -43,10 +53,7 @@ function fromBase64Url(input: string): Buffer {
 
 function getSessionSecret(): string {
   const secret = process.env.ADMIN_SESSION_SECRET;
-  if (!secret) {
-    throw new Error("Missing ADMIN_SESSION_SECRET environment variable.");
-  }
-  return secret;
+  return secret ?? "";
 }
 
 function hashPassword(password: string, salt?: string) {
@@ -68,18 +75,20 @@ function hashPassword(password: string, salt?: string) {
   };
 }
 
-async function ensureAdminConfig(): Promise<StoredAdminConfig> {
+async function ensureAdminConfig(): Promise<EnsureConfigResult> {
   try {
     const raw = await readFile(ADMIN_FILE_PATH, "utf8");
-    return JSON.parse(raw) as StoredAdminConfig;
+    return { config: JSON.parse(raw) as StoredAdminConfig };
   } catch {
     const username = process.env.ADMIN_USERNAME;
     const password = process.env.ADMIN_PASSWORD;
 
     if (!username || !password) {
-      throw new Error(
-        "Missing admin credentials. Set ADMIN_USERNAME and ADMIN_PASSWORD once to initialize."
-      );
+      return {
+        config: null,
+        reason:
+          "Missing admin credentials. Set ADMIN_USERNAME and ADMIN_PASSWORD.",
+      };
     }
 
     const hashed = hashPassword(password);
@@ -93,26 +102,34 @@ async function ensureAdminConfig(): Promise<StoredAdminConfig> {
       updatedAt: new Date().toISOString(),
     };
 
-    await mkdir(path.dirname(ADMIN_FILE_PATH), { recursive: true });
-    await writeFile(ADMIN_FILE_PATH, JSON.stringify(config, null, 2), "utf8");
-    return config;
+    try {
+      await mkdir(path.dirname(ADMIN_FILE_PATH), { recursive: true });
+      await writeFile(ADMIN_FILE_PATH, JSON.stringify(config, null, 2), "utf8");
+    } catch {
+      // Read-only hosts can still run using env-backed config.
+    }
+    return { config };
   }
 }
 
 function createSessionToken(payload: SessionPayload): string {
+  const secret = getSessionSecret();
+  if (!secret) return "";
   const body = toBase64Url(JSON.stringify(payload));
   const signature = toBase64Url(
-    createHmac("sha256", getSessionSecret()).update(body).digest()
+    createHmac("sha256", secret).update(body).digest()
   );
   return `${body}.${signature}`;
 }
 
 function verifySessionToken(token: string): SessionPayload | null {
+  const secret = getSessionSecret();
+  if (!secret) return null;
   const [body, signature] = token.split(".");
   if (!body || !signature) return null;
 
   const expectedSignature = toBase64Url(
-    createHmac("sha256", getSessionSecret()).update(body).digest()
+    createHmac("sha256", secret).update(body).digest()
   );
 
   const sigBuffer = Buffer.from(signature);
@@ -137,7 +154,8 @@ export async function verifyAdminCredentials(
   username: string,
   password: string
 ): Promise<boolean> {
-  const config = await ensureAdminConfig();
+  const { config } = await ensureAdminConfig();
+  if (!config) return false;
   if (username !== config.username) return false;
 
   const hash = pbkdf2Sync(
@@ -161,6 +179,7 @@ export async function setAdminSession(username: string) {
     u: username,
     exp: Date.now() + SESSION_MAX_AGE_SECONDS * 1000,
   });
+  if (!token) return false;
   const cookieStore = await cookies();
   cookieStore.set(ADMIN_COOKIE_NAME, token, {
     httpOnly: true,
@@ -169,6 +188,7 @@ export async function setAdminSession(username: string) {
     path: "/",
     maxAge: SESSION_MAX_AGE_SECONDS,
   });
+  return true;
 }
 
 export async function clearAdminSession() {
@@ -184,7 +204,8 @@ export async function isAdminAuthenticated(): Promise<boolean> {
   const payload = verifySessionToken(token);
   if (!payload) return false;
 
-  const config = await ensureAdminConfig();
+  const { config } = await ensureAdminConfig();
+  if (!config) return false;
   return payload.u === config.username;
 }
 
@@ -192,7 +213,10 @@ export async function changeAdminPassword(
   currentPassword: string,
   nextPassword: string
 ): Promise<{ ok: boolean; reason?: string }> {
-  const config = await ensureAdminConfig();
+  const { config, reason } = await ensureAdminConfig();
+  if (!config) {
+    return { ok: false, reason: reason ?? "Admin setup is incomplete." };
+  }
 
   const currentValid = await verifyAdminCredentials(config.username, currentPassword);
   if (!currentValid) {
@@ -214,7 +238,15 @@ export async function changeAdminPassword(
     updatedAt: new Date().toISOString(),
   };
 
-  await mkdir(path.dirname(ADMIN_FILE_PATH), { recursive: true });
-  await writeFile(ADMIN_FILE_PATH, JSON.stringify(updated, null, 2), "utf8");
-  return { ok: true };
+  try {
+    await mkdir(path.dirname(ADMIN_FILE_PATH), { recursive: true });
+    await writeFile(ADMIN_FILE_PATH, JSON.stringify(updated, null, 2), "utf8");
+    return { ok: true };
+  } catch {
+    return {
+      ok: false,
+      reason:
+        "Password update failed: host filesystem is read-only. Use env vars or persistent storage.",
+    };
+  }
 }

@@ -39,8 +39,16 @@ export async function getSiteTheme(): Promise<SiteThemeConfig> {
       updatedAt: parsed.updatedAt ?? new Date().toISOString(),
     };
   } catch {
-    await mkdir(path.dirname(SITE_THEME_FILE), { recursive: true });
-    await writeFile(SITE_THEME_FILE, JSON.stringify(DEFAULT_THEME, null, 2), "utf8");
+    try {
+      await mkdir(path.dirname(SITE_THEME_FILE), { recursive: true });
+      await writeFile(
+        SITE_THEME_FILE,
+        JSON.stringify(DEFAULT_THEME, null, 2),
+        "utf8"
+      );
+    } catch {
+      // Ignore write errors on read-only hosting and continue with defaults.
+    }
     return DEFAULT_THEME;
   }
 }
