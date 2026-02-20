@@ -42,7 +42,7 @@ export default function Footer() {
                     </div>
 
                     {/* Social Links */}
-                    <div className="flex items-center justify-center gap-3">
+                    <div className="flex items-center justify-center gap-3 flex-wrap">
                         {[
                             { href: profile.social.github, icon: Github, label: "GitHub" },
                             { href: profile.social.linkedin, icon: Linkedin, label: "LinkedIn" },

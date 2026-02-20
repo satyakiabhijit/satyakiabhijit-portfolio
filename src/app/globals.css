@@ -53,11 +53,13 @@ body {
   color: var(--text-primary);
   font-family: var(--font-inter), system-ui, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
 }
 
 /* Smooth Scrolling */
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 /* Premium Scrollbar */
@@ -631,6 +633,43 @@ textarea:focus-visible {
 .snowflake {
   will-change: transform;
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+@keyframes rainfall {
+  0% {
+    transform: translate3d(0, -15vh, 0);
+  }
+  100% {
+    transform: translate3d(-8px, 115vh, 0);
+  }
+}
+
+@keyframes autumn-fall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(35px, 110vh, 0) rotate(320deg);
+    opacity: 0;
+  }
+}
+
+@keyframes spring-fall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(-28px, 110vh, 0) rotate(280deg);
+    opacity: 0;
+  }
 }
 
 /* Glitter effect on snowflakes */

@@ -39,20 +39,21 @@ export default function LinuxDesktopIcons({
   };
 
   return (
-    <div className="absolute inset-0 pt-24 pl-8 flex flex-col gap-6">
+    <div className="absolute inset-0 pt-16 sm:pt-24 pl-3 sm:pl-8 flex flex-col gap-4 sm:gap-6">
       {icons.map((item) => (
         <button
           key={item.name}
-          onDoubleClick={() => handleDoubleClick(item.action)}
-          className="flex flex-col items-center gap-2 w-20 group cursor-pointer"
+          onClick={() => handleDoubleClick(item.action)}
+          className="flex flex-col items-center gap-2 w-16 sm:w-20 group cursor-pointer"
+          type="button"
         >
           <div
-            className={`w-16 h-16 rounded-xl flex items-center justify-center ${item.color} transition-colors bg-black/20 group-hover:bg-white/10`}
+            className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center ${item.color} transition-colors bg-black/20 group-hover:bg-white/10`}
           >
-            <item.icon size={32} />
+            <item.icon size={28} />
           </div>
           <span
-            className="text-sm text-center rounded px-2 py-0.5 drop-shadow-lg text-white group-hover:bg-white/20"
+            className="text-xs sm:text-sm text-center rounded px-2 py-0.5 drop-shadow-lg text-white group-hover:bg-white/20 max-w-full truncate"
           >
             {item.name}
           </span>

@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import LazyWinterEffects from "./LazyWinterEffects";
+import SeasonEffects from "./SeasonEffects";
 
 export default function ConditionalLayout({
   children,
@@ -12,13 +12,14 @@ export default function ConditionalLayout({
 }) {
   const pathname = usePathname();
   const isLinuxMode = pathname === "/linux";
+  const isAdminRoute = pathname.startsWith("/admin");
 
   return (
     <>
-      {!isLinuxMode && <LazyWinterEffects />}
-      {!isLinuxMode && <Navbar />}
+      {!isLinuxMode && !isAdminRoute && <SeasonEffects />}
+      {!isLinuxMode && !isAdminRoute && <Navbar />}
       <main className={isLinuxMode ? "" : ""}>{children}</main>
-      {!isLinuxMode && <Footer />}
+      {!isLinuxMode && !isAdminRoute && <Footer />}
     </>
   );
 }

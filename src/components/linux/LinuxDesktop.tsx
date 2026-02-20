@@ -13,6 +13,11 @@ const DEFAULT_WIDTH = 800;
 const DEFAULT_HEIGHT = 500;
 const TERMINAL_WIDTH = 700;
 const TERMINAL_HEIGHT = 450;
+const MOBILE_BREAKPOINT = 768;
+const TOPBAR_HEIGHT = 44;
+const EDGE_PADDING = 12;
+const MIN_WINDOW_WIDTH = 320;
+const MIN_WINDOW_HEIGHT = 240;
 
 interface WindowState {
   id: string;
@@ -26,9 +31,14 @@ interface WindowState {
   initialFile?: string;
 }
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
 export default function LinuxDesktop() {
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [activeWindow, setActiveWindow] = useState<string | null>(null);
+  const [viewport, setViewport] = useState({ width: 1200, height: 800 });
   const [dragState, setDragState] = useState<{
     id: string;
     startX: number;
@@ -48,16 +58,46 @@ export default function LinuxDesktop() {
   } | null>(null);
 
   const openWindow = (type: "files" | "terminal", initialFile?: string) => {
+    const viewportWidth = viewport.width;
+    const viewportHeight = viewport.height;
+    const availableHeight = Math.max(
+      MIN_WINDOW_HEIGHT,
+      viewportHeight - TOPBAR_HEIGHT - EDGE_PADDING * 2
+    );
+    const maxWidth = Math.max(
+      MIN_WINDOW_WIDTH,
+      viewportWidth - EDGE_PADDING * 2
+    );
+    const baseWidth = type === "terminal" ? TERMINAL_WIDTH : DEFAULT_WIDTH;
+    const baseHeight = type === "terminal" ? TERMINAL_HEIGHT : DEFAULT_HEIGHT;
+    const compactScreen = viewportWidth < MOBILE_BREAKPOINT;
+    const width = compactScreen ? maxWidth : Math.min(baseWidth, maxWidth);
+    const height = compactScreen
+      ? availableHeight
+      : Math.min(baseHeight, availableHeight);
+
     const id = `${type}-${Date.now()}`;
     const newWindow: WindowState = {
       id,
       type,
-      x: 80 + windows.length * 40,
-      y: 60 + windows.length * 30,
-      width: type === "terminal" ? TERMINAL_WIDTH : DEFAULT_WIDTH,
-      height: type === "terminal" ? TERMINAL_HEIGHT : DEFAULT_HEIGHT,
+      x: compactScreen
+        ? EDGE_PADDING
+        : clamp(
+            80 + windows.length * 40,
+            EDGE_PADDING,
+            Math.max(EDGE_PADDING, viewportWidth - width - EDGE_PADDING)
+          ),
+      y: compactScreen
+        ? EDGE_PADDING
+        : clamp(
+            60 + windows.length * 30,
+            EDGE_PADDING,
+            Math.max(EDGE_PADDING, availableHeight - height - EDGE_PADDING)
+          ),
+      width,
+      height,
       minimized: false,
-      maximized: false,
+      maximized: compactScreen,
       ...(type === "files" && initialFile ? { initialFile } : {}),
     };
     setWindows((prev) => [...prev, newWindow]);
@@ -95,40 +135,91 @@ export default function LinuxDesktop() {
 
   const toggleMaximize = useCallback((id: string) => {
     setWindows((prev) =>
-      prev.map((w) =>
-        w.id === id ? { ...w, maximized: !w.maximized } : w
-      )
+      prev.map((w) => (w.id === id ? { ...w, maximized: !w.maximized } : w))
     );
   }, []);
 
-  const updateWindowPosition = useCallback((id: string, x: number, y: number) => {
-    setWindows((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, x, y } : w))
-    );
-  }, []);
+  const updateWindowPosition = useCallback(
+    (id: string, x: number, y: number) => {
+      const viewportWidth = viewport.width;
+      const availableHeight = Math.max(
+        MIN_WINDOW_HEIGHT,
+        viewport.height - TOPBAR_HEIGHT
+      );
 
-  const updateWindowSize = useCallback(
-    (id: string, width: number, height: number, x?: number, y?: number) => {
       setWindows((prev) =>
         prev.map((w) => {
           if (w.id !== id) return w;
-          const updates: Partial<WindowState> = {
-            width: Math.max(400, Math.min(width, window.innerWidth)),
-            height: Math.max(300, Math.min(height, window.innerHeight - 60)),
+          const maxX = Math.max(
+            EDGE_PADDING,
+            viewportWidth - w.width - EDGE_PADDING
+          );
+          const maxY = Math.max(
+            EDGE_PADDING,
+            availableHeight - w.height - EDGE_PADDING
+          );
+          return {
+            ...w,
+            x: clamp(x, EDGE_PADDING, maxX),
+            y: clamp(y, EDGE_PADDING, maxY),
           };
-          if (x !== undefined) updates.x = Math.max(0, x);
-          if (y !== undefined) updates.y = Math.max(0, y);
+        })
+      );
+    },
+    [viewport.height, viewport.width]
+  );
+
+  const updateWindowSize = useCallback(
+    (id: string, width: number, height: number, x?: number, y?: number) => {
+      const viewportWidth = viewport.width;
+      const availableHeight = Math.max(
+        MIN_WINDOW_HEIGHT,
+        viewport.height - TOPBAR_HEIGHT - EDGE_PADDING * 2
+      );
+      const minWidth =
+        viewportWidth < MOBILE_BREAKPOINT ? 260 : MIN_WINDOW_WIDTH;
+      const minHeight =
+        viewportWidth < MOBILE_BREAKPOINT ? 200 : MIN_WINDOW_HEIGHT;
+
+      setWindows((prev) =>
+        prev.map((w) => {
+          if (w.id !== id) return w;
+          const boundedWidth = clamp(
+            width,
+            minWidth,
+            Math.max(minWidth, viewportWidth - EDGE_PADDING * 2)
+          );
+          const boundedHeight = clamp(
+            height,
+            minHeight,
+            Math.max(minHeight, availableHeight)
+          );
+          const maxX = Math.max(
+            EDGE_PADDING,
+            viewportWidth - boundedWidth - EDGE_PADDING
+          );
+          const maxY = Math.max(
+            EDGE_PADDING,
+            availableHeight - boundedHeight - EDGE_PADDING
+          );
+
+          const updates: Partial<WindowState> = {
+            width: boundedWidth,
+            height: boundedHeight,
+          };
+          if (x !== undefined) updates.x = clamp(x, EDGE_PADDING, maxX);
+          if (y !== undefined) updates.y = clamp(y, EDGE_PADDING, maxY);
           return { ...w, ...updates };
         })
       );
     },
-    []
+    [viewport.height, viewport.width]
   );
 
   const handleTitleBarMouseDown = (e: React.MouseEvent, id: string) => {
     if ((e.target as HTMLElement).closest("button")) return;
     e.preventDefault();
-    const w = windows.find((w) => w.id === id);
+    const w = windows.find((windowItem) => windowItem.id === id);
     if (w && !w.maximized) {
       setActiveWindow(id);
       setDragState({
@@ -141,9 +232,13 @@ export default function LinuxDesktop() {
     }
   };
 
-  const handleResizeMouseDown = (e: React.MouseEvent, id: string, edge: string) => {
+  const handleResizeMouseDown = (
+    e: React.MouseEvent,
+    id: string,
+    edge: string
+  ) => {
     e.stopPropagation();
-    const w = windows.find((w) => w.id === id);
+    const w = windows.find((windowItem) => windowItem.id === id);
     if (w) {
       setResizeState({
         id,
@@ -159,14 +254,55 @@ export default function LinuxDesktop() {
   };
 
   useEffect(() => {
+    const updateViewport = () => {
+      const nextWidth = window.innerWidth;
+      const nextHeight = window.innerHeight;
+
+      setViewport({
+        width: nextWidth,
+        height: nextHeight,
+      });
+
+      setWindows((prev) =>
+        prev.map((w) => {
+          const maxWidth = Math.max(
+            MIN_WINDOW_WIDTH,
+            nextWidth - EDGE_PADDING * 2
+          );
+          const maxHeight = Math.max(
+            MIN_WINDOW_HEIGHT,
+            nextHeight - TOPBAR_HEIGHT - EDGE_PADDING * 2
+          );
+          const width = clamp(w.width, Math.min(260, maxWidth), maxWidth);
+          const height = clamp(w.height, Math.min(200, maxHeight), maxHeight);
+          const maxX = Math.max(EDGE_PADDING, nextWidth - width - EDGE_PADDING);
+          const maxY = Math.max(EDGE_PADDING, maxHeight - height);
+
+          return {
+            ...w,
+            width,
+            height,
+            x: clamp(w.x, EDGE_PADDING, maxX),
+            y: clamp(w.y, EDGE_PADDING, maxY),
+          };
+        })
+      );
+    };
+
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+    return () => window.removeEventListener("resize", updateViewport);
+  }, []);
+
+  useEffect(() => {
     if (!dragState) return;
     const onMove = (e: MouseEvent) => {
       const dx = e.clientX - dragState.startX;
       const dy = e.clientY - dragState.startY;
       updateWindowPosition(
         dragState.id,
-        Math.max(0, dragState.windowX + dx),
-        Math.max(0, dragState.windowY + dy)
+        dragState.windowX + dx,
+        dragState.windowY + dy
       );
     };
     const onUp = () => setDragState(null);
@@ -212,10 +348,12 @@ export default function LinuxDesktop() {
   const visibleWindows = windows.filter((w) => !w.minimized);
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-[#2c001e]">
-      <LinuxTopBar onOpenFiles={() => openWindow("files")} onOpenTerminal={() => openWindow("terminal")} />
+    <div className="h-[100dvh] min-h-[100svh] flex flex-col overflow-hidden bg-[#2c001e]">
+      <LinuxTopBar
+        onOpenFiles={() => openWindow("files")}
+        onOpenTerminal={() => openWindow("terminal")}
+      />
 
-      {/* Desktop background with subtle pattern */}
       <div className="flex-1 relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-30"
@@ -237,16 +375,13 @@ export default function LinuxDesktop() {
           onOpenFile={(file) => openWindow("files", file)}
         />
 
-        {/* Taskbar for minimized windows */}
         {minimizedWindows.length > 0 && (
-          <div
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 px-4 py-2 rounded-xl backdrop-blur border bg-[#2d2d2d]/90 border-[#3d3d3d]"
-          >
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex max-w-[calc(100%-1rem)] flex-wrap justify-center gap-2 px-3 py-2 rounded-xl backdrop-blur border bg-[#2d2d2d]/90 border-[#3d3d3d]">
             {minimizedWindows.map((w) => (
               <button
                 key={w.id}
                 onClick={() => restoreWindow(w.id)}
-                className="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-[#3d3d3d] hover:bg-indigo-600/50 text-gray-300 hover:text-white"
+                className="px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-[#3d3d3d] hover:bg-indigo-600/50 text-gray-300 hover:text-white"
               >
                 {w.type === "files" ? "Files" : "Terminal"}
               </button>
@@ -254,7 +389,6 @@ export default function LinuxDesktop() {
           </div>
         )}
 
-        {/* Floating windows */}
         {visibleWindows.map((w) => {
           const isMax = w.maximized;
           const style = isMax
@@ -273,13 +407,12 @@ export default function LinuxDesktop() {
           return (
             <div
               key={w.id}
-              className={`absolute shadow-2xl rounded-t overflow-hidden flex flex-col select-none resize-box ${
-                activeWindow === w.id ? "z-20 ring-2 ring-indigo-500/50" : "z-10"
-              }`}
+              className={`absolute shadow-2xl overflow-hidden flex flex-col select-none resize-box ${
+                isMax ? "rounded-none" : "rounded-xl"
+              } ${activeWindow === w.id ? "z-20 ring-2 ring-indigo-500/50" : "z-10"}`}
               style={style}
               onClick={() => setActiveWindow(w.id)}
             >
-              {/* Draggable title bar */}
               <div
                 className="flex items-center gap-2 px-3 py-2 border-b cursor-grab active:cursor-grabbing shrink-0 bg-[#3d3d3d] border-[#4d4d4d]"
                 onMouseDown={(e) => handleTitleBarMouseDown(e, w.id)}
@@ -294,7 +427,11 @@ export default function LinuxDesktop() {
                     aria-label="Close"
                     title="Close"
                   >
-                    <X size={11} className="text-black/50 group-hover:text-black/90" strokeWidth={2.5} />
+                    <X
+                      size={11}
+                      className="text-black/50 group-hover:text-black/90"
+                      strokeWidth={2.5}
+                    />
                   </button>
                   <button
                     onClick={(e) => {
@@ -305,7 +442,11 @@ export default function LinuxDesktop() {
                     aria-label="Minimize"
                     title="Minimize"
                   >
-                    <Minus size={11} className="text-black/50 group-hover:text-black/90" strokeWidth={2.5} />
+                    <Minus
+                      size={11}
+                      className="text-black/50 group-hover:text-black/90"
+                      strokeWidth={2.5}
+                    />
                   </button>
                   <button
                     onClick={(e) => {
@@ -317,32 +458,46 @@ export default function LinuxDesktop() {
                     title={w.maximized ? "Restore" : "Maximize"}
                   >
                     {w.maximized ? (
-                      <Square size={9} className="text-black/50 group-hover:text-black/90" strokeWidth={2} />
+                      <Square
+                        size={9}
+                        className="text-black/50 group-hover:text-black/90"
+                        strokeWidth={2}
+                      />
                     ) : (
-                      <Maximize2 size={9} className="text-black/50 group-hover:text-black/90" strokeWidth={2} />
+                      <Maximize2
+                        size={9}
+                        className="text-black/50 group-hover:text-black/90"
+                        strokeWidth={2}
+                      />
                     )}
                   </button>
                 </div>
-                <span
-                  className="text-sm ml-2 truncate flex-1 text-gray-300"
-                >
-                  {w.type === "files" ? "Files — Home" : "Terminal"}
+                <span className="text-sm ml-2 truncate flex-1 text-gray-300">
+                  {w.type === "files" ? "Files - Home" : "Terminal"}
                 </span>
               </div>
 
-              {/* Window content */}
               <div className="flex-1 min-h-0 overflow-hidden relative">
-                {w.type === "files" && <LinuxFileManager hideTitleBar initialFile={w.initialFile} />}
+                {w.type === "files" && (
+                  <LinuxFileManager hideTitleBar initialFile={w.initialFile} />
+                )}
                 {w.type === "terminal" && <LinuxTerminal hideTitleBar />}
 
-                {/* Resize handle - bottom-right corner, only when not maximized */}
                 {!isMax && (
                   <div
                     className="absolute bottom-0 right-0 w-5 h-5 cursor-se-resize flex items-end justify-end pr-0.5 pb-0.5 hover:bg-indigo-500/20 rounded-tl transition-colors"
                     onMouseDown={(e) => handleResizeMouseDown(e, w.id, "se")}
                   >
-                    <svg width="12" height="12" viewBox="0 0 12 12" className="text-gray-500">
-                      <path d="M12 12V8L8 12h4zM12 4V0H8l4 4z" fill="currentColor" />
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      className="text-gray-500"
+                    >
+                      <path
+                        d="M12 12V8L8 12h4zM12 4V0H8l4 4z"
+                        fill="currentColor"
+                      />
                     </svg>
                   </div>
                 )}

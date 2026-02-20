@@ -61,21 +61,21 @@ export default function LinuxTopBar({ onOpenFiles, onOpenTerminal }: LinuxTopBar
   };
 
   return (
-    <header className={`h-11 backdrop-blur-md ${topBarBg} flex items-center justify-between px-4 shadow-sm border-b ${topBarBorder}`}>
-      <div className="flex items-center">
+    <header className={`h-11 backdrop-blur-md ${topBarBg} flex items-center justify-between px-2 sm:px-4 shadow-sm border-b ${topBarBorder}`}>
+      <div className="flex items-center min-w-0">
         <div className="relative" ref={activitiesRef}>
           <button
             onClick={() => setActivitiesOpen(!activitiesOpen)}
-            className={`cursor-pointer flex items-center gap-2 px-3 py-2 rounded-lg ${activitiesOpen ? "bg-white/10" : ""} ${hoverBg} transition-colors ${textPrimary} text-sm font-medium`}
+            className={`cursor-pointer flex items-center gap-2 px-2 sm:px-3 py-2 rounded-lg ${activitiesOpen ? "bg-white/10" : ""} ${hoverBg} transition-colors ${textPrimary} text-sm font-medium`}
             aria-label="Activities"
           >
-            <Monitor size={20} strokeWidth={1.5} />
-            <span>Activities</span>
+            <Monitor size={18} strokeWidth={1.5} />
+            <span className="hidden sm:inline">Activities</span>
           </button>
           {activitiesOpen && (
             <div
               onClick={(e) => e.stopPropagation()}
-              className="absolute left-0 top-full mt-1 py-2 rounded-xl shadow-2xl z-[70] min-w-[200px] bg-[#3a1230] border border-[#5b254d]"
+              className="absolute left-0 top-full mt-1 py-2 rounded-xl shadow-2xl z-[70] min-w-[180px] sm:min-w-[200px] bg-[#3a1230] border border-[#5b254d]"
             >
               <div className="px-3 py-2 border-b border-[#4d4d4d]/30">
                 <span className={`text-xs font-medium uppercase tracking-wider ${textSecondary}`}>Applications</span>
@@ -99,29 +99,31 @@ export default function LinuxTopBar({ onOpenFiles, onOpenTerminal }: LinuxTopBar
         </div>
       </div>
 
-      <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none">
+      <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center pointer-events-none">
         <span suppressHydrationWarning className="text-gray-100 text-sm font-medium tabular-nums">{timeStr}</span>
         <span suppressHydrationWarning className={`${textSecondary} text-[11px]`}>{dateStr}</span>
       </div>
 
-      <div className="flex items-center gap-1">
-        <div className="flex items-center gap-3 px-2 py-1 rounded-lg">
+      <div className="flex items-center gap-1 min-w-0">
+        <div className="hidden sm:flex items-center gap-2 md:gap-3 px-2 py-1 rounded-lg">
           <Wifi size={18} className={textSecondary} />
           <Volume2 size={18} className={textSecondary} />
           <div className="flex items-center gap-1.5">
             <Battery size={18} className={textSecondary} />
-            <span className={`text-xs font-medium tabular-nums ${textSecondary}`}>{batteryPercent}%</span>
+            <span className={`text-xs font-medium tabular-nums ${textSecondary} hidden md:inline`}>
+              {batteryPercent}%
+            </span>
           </div>
         </div>
-        <div className={`h-6 w-px ${divider} mx-1`} />
+        <div className={`h-6 w-px ${divider} mx-1 hidden sm:block`} />
         <Link
           href="/"
-          className={`cursor-pointer flex items-center gap-2 px-3 py-2 rounded-lg ${hoverBg} transition-colors ${textPrimary} text-sm`}
+          className={`cursor-pointer flex items-center gap-2 px-2 sm:px-3 py-2 rounded-lg ${hoverBg} transition-colors ${textPrimary} text-sm`}
         >
           <LogOut size={16} />
-          <span>Exit to Classic</span>
+          <span className="hidden lg:inline">Exit to Classic</span>
         </Link>
-        <div className={`flex items-center gap-2 pl-3 ml-1 border-l ${divider}`}>
+        <div className={`flex items-center gap-2 pl-2 sm:pl-3 ml-1 border-l ${divider}`}>
           <div className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-white/20">
             <Image
               src={profile.avatar}
@@ -131,7 +133,7 @@ export default function LinuxTopBar({ onOpenFiles, onOpenTerminal }: LinuxTopBar
               className="w-full h-full object-cover"
             />
           </div>
-          <span className={`${textPrimary} text-sm font-medium hidden sm:inline`}>
+          <span className={`${textPrimary} text-sm font-medium hidden xl:inline`}>
             {profile.name.split(" ")[0]}
           </span>
         </div>

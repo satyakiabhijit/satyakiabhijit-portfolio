@@ -143,9 +143,9 @@ export default function Home() {
       >
         {/* Ambient background orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[100px] animate-pulse-glow" />
+          <div className="absolute top-1/4 left-1/4 w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] lg:w-[500px] lg:h-[500px] bg-indigo-500/20 rounded-full blur-[100px] animate-pulse-glow" />
           <div
-            className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-500/15 rounded-full blur-[100px] animate-pulse-glow"
+            className="absolute bottom-1/4 right-1/4 w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] lg:w-[400px] lg:h-[400px] bg-purple-500/15 rounded-full blur-[100px] animate-pulse-glow"
             style={{ animationDelay: "1.5s" }}
           />
         </div>
@@ -339,7 +339,7 @@ export default function Home() {
 
                 {/* Status badge */}
                 <motion.div
-                  className="absolute -top-2 -right-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700"
+                  className="absolute top-0 right-0 sm:-top-2 sm:-right-2 px-3 sm:px-4 py-2 rounded-xl bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700"
                   animate={{ y: [0, -8, 0] }}
                   transition={{
                     duration: 3,
@@ -355,7 +355,7 @@ export default function Home() {
 
                 {/* Location badge */}
                 <motion.div
-                  className="absolute -bottom-2 -left-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700"
+                  className="absolute bottom-0 left-0 sm:-bottom-2 sm:-left-2 px-3 sm:px-4 py-2 rounded-xl bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700 max-w-[70vw] sm:max-w-none"
                   animate={{ y: [0, 8, 0] }}
                   transition={{
                     duration: 3,
@@ -364,9 +364,9 @@ export default function Home() {
                     delay: 1.5,
                   }}
                 >
-                  <span className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <span className="flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                     <MapPin size={14} className="text-indigo-500" />
-                    {profile.location}
+                    <span className="truncate">{profile.location}</span>
                   </span>
                 </motion.div>
               </div>
@@ -378,7 +378,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5 }}
-            className="absolute bottom-12 left-1/2 -translate-x-1/2"
+            className="absolute bottom-12 left-1/2 -translate-x-1/2 hidden sm:block"
           >
             <motion.a
               href="#about"

@@ -70,12 +70,12 @@ export default function LinuxFileManager({ hideTitleBar = false, initialFile }: 
       <div className="flex items-center gap-2 px-3 py-2 border-b bg-[#2d2d2d] border-[#3d3d3d]">
         <button
           onClick={() => navigateTo("")}
-          className="flex items-center gap-2 px-3 py-1.5 rounded text-sm hover:bg-[#3d3d3d] text-gray-400 hover:text-gray-200"
+          className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded text-sm hover:bg-[#3d3d3d] text-gray-400 hover:text-gray-200 shrink-0"
         >
           <Home size={16} />
-          Home
+          <span className="hidden sm:inline">Home</span>
         </button>
-        <div className="flex-1 flex items-center gap-1 px-3 py-1.5 rounded text-sm font-mono overflow-x-auto bg-[#1e1e1e] text-gray-400">
+        <div className="flex-1 min-w-0 flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded text-sm font-mono overflow-x-auto bg-[#1e1e1e] text-gray-400">
           <span className="text-cyan-400">~</span>
           {breadcrumbParts.map((part, i) => (
             <span key={i}>
@@ -93,8 +93,8 @@ export default function LinuxFileManager({ hideTitleBar = false, initialFile }: 
         </div>
       </div>
 
-      <div className="flex-1 flex min-h-0">
-        <div className="w-1/2 border-r flex flex-col overflow-hidden border-[#3d3d3d]">
+      <div className="flex-1 flex min-h-0 flex-col md:flex-row">
+        <div className="h-1/2 md:h-auto md:w-1/2 md:border-r border-b md:border-b-0 flex flex-col overflow-hidden border-[#3d3d3d]">
           <div className="flex-1 overflow-auto p-2">
             {currentPath && (
               <button
@@ -112,7 +112,7 @@ export default function LinuxFileManager({ hideTitleBar = false, initialFile }: 
               <button
                 key={file.name}
                 onClick={() => handleFileClick(file)}
-                className={`flex items-center gap-2 w-full px-3 py-2 rounded text-left text-sm ${
+                className={`flex items-center gap-2 w-full px-3 py-2 rounded text-left text-sm min-w-0 ${
                   selectedFile?.name === file.name
                     ? "bg-indigo-600/30 text-indigo-300"
                     : "text-gray-300 hover:bg-[#3d3d3d]"
@@ -123,13 +123,13 @@ export default function LinuxFileManager({ hideTitleBar = false, initialFile }: 
                 ) : (
                   <FileText size={18} className="text-blue-400" />
                 )}
-                {file.name}
+                <span className="truncate">{file.name}</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="w-1/2 flex flex-col bg-[#1e1e1e]">
+        <div className="h-1/2 md:h-auto md:w-1/2 flex flex-col bg-[#1e1e1e]">
           {fileContent ? (
             <pre className="flex-1 p-4 overflow-auto text-xs font-mono whitespace-pre-wrap text-gray-300">
               {fileContent}

@@ -70,7 +70,7 @@ export default function Navbar() {
               e.preventDefault();
               handleLinkClick("#home");
             }}
-            className="text-2xl font-bold font-[family-name:var(--font-outfit)]"
+            className="text-lg sm:text-2xl font-bold font-[family-name:var(--font-outfit)] max-w-[60vw] sm:max-w-none truncate"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
