@@ -12,14 +12,13 @@ export default function ConditionalLayout({
 }) {
   const pathname = usePathname();
   const isLinuxMode = pathname === "/linux";
-  const isAdminRoute = pathname.startsWith("/admin");
 
   return (
     <>
-      {!isLinuxMode && !isAdminRoute && <SeasonEffects />}
-      {!isLinuxMode && !isAdminRoute && <Navbar />}
+      {!isLinuxMode && <SeasonEffects />}
+      {!isLinuxMode && <Navbar />}
       <main className={isLinuxMode ? "" : ""}>{children}</main>
-      {!isLinuxMode && !isAdminRoute && <Footer />}
+      {!isLinuxMode && <Footer />}
     </>
   );
 }
