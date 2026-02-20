@@ -44,7 +44,7 @@ export const projects: Project[] = [
         techStack: ["Python", "Streamlit", "NLP", "Google Gemini AI"],
         category: "ai-ml",
         github: "https://github.com/satyakiabhijit/resumelyze",
-        demo: "https://resumelyzer.streamlit.app/",
+        demo: "https://resumelyze-eta.vercel.app/",  // Updated demo URL
         featured: true,
         year: "2024"
     },
